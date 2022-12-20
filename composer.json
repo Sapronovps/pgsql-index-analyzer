@@ -1,0 +1,20 @@
+{
+    "name": "sapronovps/pgsqlindexanalyzer",
+    "description": "Postgresql index analyzer",
+    "type": "library",
+    "license": "MT",
+    "autoload": {
+        "psr-4": {
+            "Sapronovps\\Tests\\": "tests/",
+            "Sapronovps\\PgsqlIndexAnalyzer\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "SapronovPS"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}

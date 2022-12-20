@@ -1,0 +1,16 @@
+<phpunit
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        stopOnFailure="true"
+        failOnWarning="true">
+
+    <testsuites>
+        <testsuite name="pgsqlIndexAnalyzer">
+            <file>tests/UnusedIndexesTest.php</file>
+            <file>tests/OverlappingIndexesTest.php</file>
+            <file>tests/IndexesContainsInOther.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>

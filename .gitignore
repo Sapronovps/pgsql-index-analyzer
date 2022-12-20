@@ -1,0 +1,4 @@
+.docker
+vendor
+phpunit.xml
+docker-compose.yml
