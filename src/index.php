@@ -5,17 +5,6 @@ require '../vendor/autoload.php';
 // Запуск тестов sudo docker-compose run --rm php php ./vendor/phpunit/phpunit/phpunit -c phpunit.xml --testsuite pgsqlIndexAnalyzer
 
 $options = new \Sapronovps\PgsqlIndexAnalyzer\Option\Options();
-$options
-    ->setHost('10.243.182.166')
-    ->setDbName('wms')
-    ->setUser('sapronovps')
-    ->setPassword('93011c8a40');
-
-$options
-    ->setHost('wms.local')
-    ->setDbName('wms')
-    ->setUser('wms')
-    ->setPassword('1111');
 
 $connection = new \Sapronovps\PgsqlIndexAnalyzer\Connection\Connection($options);
 
