@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Sapronovps\PgsqlIndexAnalyzer\Dto;
 
+/**
+ * IndexDto.
+ */
 final class IndexDto
 {
     private string $tableName = '';

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Sapronovps\Tests;
 
-use Sapronovps\PgsqlIndexAnalyzer\Dto\IndexDto;
 use Sapronovps\PgsqlIndexAnalyzer\PgsqlIndexAnalyzer;
 use Sapronovps\Tests\Mock\ConnectionMock;
 
@@ -41,8 +40,7 @@ class IndexesContainsInOtherIndexesTest extends BaseTests
 
         $connection->setData([$data1, $data2]);
         $pgsqlIndexAnalyzer = new PgsqlIndexAnalyzer($connection);
-        /** @var IndexDto[] $indexDtos */
-        $indexDtos = $pgsqlIndexAnalyzer->overlappingIndexesByTable($table);
+        $indexDtos = $pgsqlIndexAnalyzer->indexesContainsInOtherIndexesByTables([$table]);
 
         $this->assertNotEmpty($indexDtos, 'Method unused indexes by table is broken.');
 

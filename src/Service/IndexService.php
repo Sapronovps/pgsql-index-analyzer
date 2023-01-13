@@ -4,41 +4,50 @@ declare(strict_types=1);
 
 namespace Sapronovps\PgsqlIndexAnalyzer\Service;
 
+use Sapronovps\PgsqlIndexAnalyzer\Builder\IndexDtoBuilder;
 use Sapronovps\PgsqlIndexAnalyzer\Connection\ConnectionInterface;
 use Sapronovps\PgsqlIndexAnalyzer\Dto\IndexDto;
-use Sapronovps\PgsqlIndexAnalyzer\Exception\TableNotExistException;
 use Sapronovps\PgsqlIndexAnalyzer\Repository\IndexRepository;
 
+/**
+ * Index service.
+ */
 final class IndexService
 {
     private IndexRepository $repository;
 
+    private IndexDtoBuilder $builder;
+
     public function __construct(ConnectionInterface $connection)
     {
         $this->repository = new IndexRepository($connection);
+        $this->builder = new IndexDtoBuilder();
     }
 
     /**
-     * @param string $table
-     * @return array
-     * @throws TableNotExistException
+     * Get all indexes by tables.
+     *
+     * @param array<string> $tables
+     * @return array<IndexDto>
      */
-    public function unusedIndexesByTable(string $table): array
+    public function allIndexesByTables(array $tables): array
     {
-        $this->tableExistOrFail($table);
+        $indexes = $this->repository->indexesByTables($tables);
 
-        return $this->unusedIndexesByTables([$table]);
+        return $this->builder->createIndexDtos($indexes);
     }
 
     /**
-     * @param array $tables
-     * @return array
+     * Get unused indexes by tables.
+     *
+     * @param array<string> $tables
+     * @return array<IndexDto>
      */
     public function unusedIndexesByTables(array $tables): array
     {
         $unusedIndexes = [];
         $indexes = $this->repository->indexesByTables($tables);
-        $indexesDtos = $this->getIndexDtos($indexes);
+        $indexesDtos = $this->builder->createIndexDtos($indexes);
 
         foreach ($indexesDtos as $indexesDto) {
             if ($indexesDto->getIndexScan() === 0) {
@@ -50,32 +59,16 @@ final class IndexService
     }
 
     /**
-     * @param string $table
-     * @return array
-     * @throws TableNotExistException
-     */
-    public function overlappingIndexesByTable(string $table): array
-    {
-        $this->tableExistOrFail($table);
-
-        return $this->overlappingIndexesByTables([$table]);
-    }
-
-    /**
-     * @param array $tables
-     * @return array
+     * @param array<string> $tables
+     * @return array<IndexDto>
      */
     public function overlappingIndexesByTables(array $tables): array
     {
         $overlappingIndexes = [];
         $indexes = $this->repository->indexesByTables($tables);
-        $indexesDtos = $this->getIndexDtos($indexes);
-        $groupIndexDtosByTable = $this->groupIndexDtosByTable($indexesDtos);
+        $indexesDtos = $this->builder->createIndexDtos($indexes);
+        $groupIndexDtosByTable = $this->builder->groupByTable($indexesDtos);
 
-        /**
-         * @var IndexDto $index
-         * @var IndexDto $index2
-         */
         foreach ($groupIndexDtosByTable as $indexes) {
             foreach ($indexes as $index) {
                 $columns = explode(', ', $index->getColumns());
@@ -106,32 +99,16 @@ final class IndexService
     }
 
     /**
-     * @param string $table
-     * @return array
-     * @throws TableNotExistException
-     */
-    public function indexesContainsInOtherIndexesByTable(string $table): array
-    {
-        $this->tableExistOrFail($table);
-
-        return $this->indexesContainsInOtherIndexesByTables([$table]);
-    }
-
-    /**
-     * @param array $tables
-     * @return array
+     * @param array<string> $tables
+     * @return array<IndexDto>
      */
     public function indexesContainsInOtherIndexesByTables(array $tables): array
     {
         $indexesContainsInOtherIndexes = [];
         $indexes = $this->repository->indexesByTables($tables);
-        $indexesDtos = $this->getIndexDtos($indexes);
-        $groupIndexDtosByTable = $this->groupIndexDtosByTable($indexesDtos);
+        $indexesDtos = $this->builder->createIndexDtos($indexes);
+        $groupIndexDtosByTable = $this->builder->groupByTable($indexesDtos);
 
-        /**
-         * @var IndexDto $index
-         * @var IndexDto $index2
-         */
         foreach ($groupIndexDtosByTable as $indexes) {
             foreach ($indexes as $index) {
                 $columns = explode(', ', $index->getColumns());
@@ -164,59 +141,5 @@ final class IndexService
         }
 
         return $indexesContainsInOtherIndexes;
-    }
-
-    /**
-     * Fail if table is not exist.
-     *
-     * @param string $table
-     * @return void
-     * @throws TableNotExistException
-     */
-    private function tableExistOrFail(string $table): void
-    {
-        $tableInfo = $this->repository->tableInfo($table);
-
-        if ($tableInfo === false) {
-            throw new TableNotExistException("Table with name '$table' not exist.");
-        }
-    }
-
-    /**
-     * @param array $indexes
-     * @return IndexDto[]
-     */
-    private function getIndexDtos(array $indexes): array
-    {
-        $indexesDtos = [];
-
-        foreach ($indexes as $index) {
-            $indexDto = (new IndexDto())
-                ->setTableName($index['table_name'])
-                ->setIndexName($index['index_name'])
-                ->setColumns($index['columns'])
-                ->setIndexSizePretty($index['index_size_pretty'])
-                ->setIndexSize($index['index_size'])
-                ->setIndexRelid($index['index_relid'])
-                ->setRelid($index['relid'])
-                ->setIndexScan($index['index_scan'])
-                ->setIndexTupRead($index['index_tup_read'])
-                ->setIndexTupFetch($index['index_tup_fetch']);
-
-            $indexesDtos[] = $indexDto;
-        }
-
-        return $indexesDtos;
-    }
-
-    private function groupIndexDtosByTable(array $indexDtos): array
-    {
-        $groupIndexDtosByTable = [];
-
-        foreach ($indexDtos as $indexesDto) {
-            $groupIndexDtosByTable[$indexesDto->getTableName()][] = $indexesDto;
-        }
-
-        return $groupIndexDtosByTable;
     }
 }

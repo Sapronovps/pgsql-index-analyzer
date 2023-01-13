@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Sapronovps\PgsqlIndexAnalyzer\Option;
 
+/**
+ * Options interface.
+ */
 interface OptionsInterface
 {
     public function setHost(string $host): self;
@@ -28,5 +31,9 @@ interface OptionsInterface
 
     public function getDsn(): string;
 
+    /**
+     * @param array<string, mixed> $options
+     * @return static
+     */
     public static function createOptions(array $options): self;
 }

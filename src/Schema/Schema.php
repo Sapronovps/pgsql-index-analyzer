@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Sapronovps\PgsqlIndexAnalyzer\Schema;
 
+/**
+ * Schema.
+ */
 final class Schema
 {
-    public function tableInfo(string $table): string
-    {
-        return <<<SQL
-            SELECT * FROM pg_tables WHERE tablename = '$table';
-            SQL;
-    }
-
+    /**
+     * @param array<string> $tables
+     * @return string
+     */
     public function indexesByTables(array $tables): string
     {
         array_walk($tables, fn(&$x) => $x = "'$x'");

@@ -5,6 +5,9 @@ namespace Sapronovps\PgsqlIndexAnalyzer\Repository;
 use Sapronovps\PgsqlIndexAnalyzer\Connection\ConnectionInterface;
 use Sapronovps\PgsqlIndexAnalyzer\Schema\Schema;
 
+/**
+ * Index repository.
+ */
 final class IndexRepository
 {
     private Schema $schema;
@@ -14,20 +17,12 @@ final class IndexRepository
         $this->schema = new Schema();
     }
 
-    public function tableInfo(string $table)
-    {
-        $sql = $this->schema->tableInfo($table);
-
-        return $this->connection->one($sql);
-    }
-
-    public function unusedIndexesByTable(array $tables): array
-    {
-        $sql = $this->schema->indexesByTables($tables);
-
-        return $this->connection->all($sql);
-    }
-
+    /**
+     * Get indexes by tables.
+     *
+     * @param array<string> $tables
+     * @return array<mixed>
+     */
     public function indexesByTables(array $tables): array
     {
         $sql = $this->schema->indexesByTables($tables);

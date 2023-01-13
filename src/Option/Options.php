@@ -6,6 +6,9 @@ namespace Sapronovps\PgsqlIndexAnalyzer\Option;
 
 use Sapronovps\PgsqlIndexAnalyzer\Exception\InvalidOptionsParameter;
 
+/**
+ * Options connection.
+ */
 final class Options implements OptionsInterface
 {
     private string $host = 'localhost';
@@ -18,6 +21,9 @@ final class Options implements OptionsInterface
 
     private string $password = '';
 
+    /**
+     * @var array|string[]
+     */
     private static array $options = [
         'host',
         'port',
@@ -97,11 +103,15 @@ final class Options implements OptionsInterface
         return 'pgsql:host=' . $this->getHost() . ';port=' . $this->getPort() . ';dbname=' . $this->getDbName() . ';';
     }
 
+    /**
+     * @param array<string, mixed> $options
+     * @return Options
+     */
     public static function createOptions(array $options): Options
     {
         $newOptions = new self();
 
-        foreach (static::$options as $internalOption) {
+        foreach (self::$options as $internalOption) {
             if (isset($options[$internalOption])) {
                 $methodName = 'set' . ucfirst($internalOption);
                 $newOptions->$methodName($options[$internalOption]);

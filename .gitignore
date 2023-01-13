@@ -2,3 +2,5 @@
 vendor
 phpunit.xml
 docker-compose.yml
+.env
+phpstan.neon

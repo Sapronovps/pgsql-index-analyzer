@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Sapronovps\PgsqlIndexAnalyzer;
 
 use Sapronovps\PgsqlIndexAnalyzer\Connection\ConnectionInterface;
+use Sapronovps\PgsqlIndexAnalyzer\Dto\IndexDto;
 use Sapronovps\PgsqlIndexAnalyzer\Service\IndexService;
 
-final class PgsqlIndexAnalyzer
+/**
+ * Pgsql index analyzer.
+ */
+final class PgsqlIndexAnalyzer implements PgsqlIndexAnalyzerInterface
 {
     private IndexService $service;
 
@@ -17,18 +21,21 @@ final class PgsqlIndexAnalyzer
     }
 
     /**
-     * @param string $table
-     * @return array
-     * @throws Exception\TableNotExistException
+     * Get all indexes by tables.
+     *
+     * @param array<string> $tables
+     * @return array<IndexDto>
      */
-    public function unusedIndexesByTable(string $table): array
+    public function allIndexesByTables(array $tables): array
     {
-        return $this->service->unusedIndexesByTable($table);
+        return $this->service->allIndexesByTables($tables);
     }
 
     /**
-     * @param array $tables
-     * @return array
+     * Get unused indexes by tables.
+     *
+     * @param array<string> $tables
+     * @return array<IndexDto>
      */
     public function unusedIndexesByTables(array $tables): array
     {
@@ -36,18 +43,10 @@ final class PgsqlIndexAnalyzer
     }
 
     /**
-     * @param string $table
-     * @return array
-     * @throws Exception\TableNotExistException
-     */
-    public function overlappingIndexesByTable(string $table): array
-    {
-        return $this->service->overlappingIndexesByTable($table);
-    }
-
-    /**
-     * @param array $tables
-     * @return array
+     * Get overlapping indexes by tables.
+     *
+     * @param array<string> $tables
+     * @return array<IndexDto>
      */
     public function overlappingIndexesByTables(array $tables): array
     {
@@ -55,18 +54,10 @@ final class PgsqlIndexAnalyzer
     }
 
     /**
-     * @param string $table
-     * @return array
-     * @throws Exception\TableNotExistException
-     */
-    public function indexesContainsInOtherIndexesByTable(string $table): array
-    {
-        return $this->service->indexesContainsInOtherIndexesByTable($table);
-    }
-
-    /**
-     * @param array $tables
-     * @return array
+     * Get indexes contains in other indexes by tables.
+     *
+     * @param array<string> $tables
+     * @return array<IndexDto>
      */
     public function indexesContainsInOtherIndexesByTables(array $tables): array
     {
