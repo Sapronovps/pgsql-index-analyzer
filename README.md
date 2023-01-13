@@ -2,6 +2,8 @@
 
 ## Introduction
 <b>PgsqlIndexAnalyzer</b> - it's a simple PHP library, which help support indexes in your postgresql database.
+<br>
+<b>Attention!</b> This library is of a recommendation nature. All the indexes obtained need to be analyzed.
 <hr>
 You can use it to find the following indexes:
 <ul>
@@ -30,13 +32,13 @@ composer require sapronovps/pgsqlindexanalyzer --dev
 # Methods
 -----
 
-Library contains only four methods:
+Library contains only 4 methods:
 
 <ul>
-<b><b></b>allIndexesByTables</b> - method return all indexes by tables.</li>
-<b><b></b>unusedIndexesByTables</b> - method return unused indexes by tables. Unused indexes are determined by the parameter <b>IndexScan = 0</b> </li>
-<b><b></b>overlappingIndexesByTables</b> - method return overlapping indexes by tables.</li>
-<b><b></b>indexesContainsInOtherIndexesByTables</b> - method return indexes contains in other indexes by tables.</li>
+<li><b>allIndexesByTables</b> - method return all indexes by tables.</li>
+<li><b>unusedIndexesByTables</b> - method return unused indexes by tables. Unused indexes are determined by the parameter <b>IndexScan = 0</b></li>
+<li><b>overlappingIndexesByTables</b> - method return overlapping indexes by tables.</li>
+<li><b>indexesContainsInOtherIndexesByTables</b> - method return indexes contains in other indexes by tables.</li>
 </ul>
 
 # Usage
@@ -70,12 +72,6 @@ $options->setHost('localhost')
 $connection = new Connection($options);
 
 $pgsqlIndexAnalyzer = new PgsqlIndexAnalyzer($connection);
-
-$tables = [
-'table1',
-'table2',
-'table3',
-];
 ```
 
 <b>Get all indexes by tables:</b>
