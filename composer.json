@@ -3,6 +3,7 @@
     "description": "PgsqlIndexAnalyzer - it's a simple PHP library, which help support indexes in your postgresql database.",
     "type": "library",
     "license": "MIT",
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Sapronovps\\Tests\\": "tests/",
