@@ -24,7 +24,7 @@ You can use it to find the following indexes:
 # Installing
 -----
 ```sh
-composer require sapronovps/pgsql-index-analyzer --dev
+composer require sapronovps/pgsqlindexanalyzer --dev
 ```
 
 # Methods
